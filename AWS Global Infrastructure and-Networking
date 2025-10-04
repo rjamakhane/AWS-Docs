@@ -1,0 +1,68 @@
+# AWS Global Infrastructure and Networking Explained
+
+This document summarizes and explains the core concepts of **AWS Global Infrastructure** (Regions, Availability Zones, Data Centers) and **AWS Networking** (Virtual Private Cloud - VPC) based on your lecture diagrams.
+
+---
+
+## 1. AWS Global Infrastructure: Regions and AZs
+
+AWS structures its services using a global hierarchy built for **high availability** and **low latency**.
+
+### 1.1 The Region
+
+A **Region** is a large, separate geographic location where AWS clusters its data centers.
+
+- **Definition:** A Region is a geographical area where AWS operates its infrastructure (e.g., the **Mumbai Region** is identified as `ap-south-1`).
+- **Containment:** Every Region is composed of multiple **Availability Zones (AZs)**.
+- **Isolation:** Regions are designed to be entirely independent of each other.  
+  By default, resources in one Region do not communicate with resources in another  
+  (e.g., Mumbai resources won't communicate with Ireland resources).
+
+---
+
+### 1.2 Availability Zone (AZ) and Data Centers
+
+An **Availability Zone (AZ)** is the core building block of the Region, representing isolated physical locations within the Region.
+
+- **Definition:** An AZ is a **Data Center (DC)** or a **cluster of data centers**.  
+  Your servers and instances (EC2) are placed within a specific AZ.
+- **Fault Tolerance:** AZs are physically separated (separate power, cooling, etc.)  
+  to ensure that if one AZ fails or goes offline, the others in the same Region remain operational.
+- **High-Speed Network:** All AZs within a single Region are connected via **low-latency, high-bandwidth** private network links.  
+  This allows instances across different AZs to share data and communicate quickly.
+- **Latency:**  
+  - Low Latency is *Good* (e.g., **1 second**)  
+  - High Latency is *Bad* (e.g., **5 seconds**)
+- **Best Practice:** Distribute your instances (EC2) across multiple AZs to achieve **high availability**.
+
+#### Visualizing Regional Isolation
+AWS infrastructure highlights the strict isolation between different geographic Regions.
+
+---
+
+## 2. AWS Networking: Virtual Private Cloud (VPC)
+
+The **Virtual Private Cloud (VPC)** is your own virtual network in the cloud, provisioned within a specific AWS Region.
+
+### 2.1 The VPC Concept
+
+- **Isolation:** A VPC creates a **logically isolated section** of the AWS Public Cloud.  
+  All your resources (EC2) are launched inside your VPC.
+- **Scope:** A VPC is created **within a Region** and spans **all the AZs** in that Region.
+- **Default VPC:** Every Region automatically comes with a **default VPC**.  
+  You can create additional **custom VPCs** as needed.
+
+---
+
+### 2.2 Inter-VPC Communication
+
+By design, VPCs are strictly isolated from each other for **security** and **organizational** purposes.
+
+- **Default State:** Two separate VPCs (even if they are in the same Region) will **not communicate** with each other by default.
+- **Required Communication:** If communication between two different VPCs is needed, you must explicitly configure a connection, such as using **VPC Peering**.
+
+---
+
+### 2.3 The Resource Hierarchy
+
+The relationship between all these components can be viewed as a **nested hierarchy**, leading down to your running application servers.
